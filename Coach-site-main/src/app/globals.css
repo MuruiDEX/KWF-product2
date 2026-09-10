@@ -1,0 +1,368 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  /* Brand — deep, calm, professional */
+  --color-dark-blue: #071426;
+  --color-navy: #0B2140;
+  --color-primary-blue: #17488F;
+  --color-primary-blue-light: #1D55A4;
+  --color-accent-warm: #C9A227;
+  --color-accent-warm-light: #FAF4E6;
+  --color-gold: #C9A227;
+  --color-gold-soft: #F6EDD3;
+  /* Surfaces & text */
+  --color-surface: #FFFFFF;
+  --color-light-gray: #F5F7FA;
+  --color-border: #E8EBEF;
+  --color-dark-text: #111827;
+  --color-secondary-text: #6B7280;
+  /* Status (single source for badges, alerts, form feedback) */
+  --color-success: #15803D;
+  --color-success-bg: #DCFCE7;
+  --color-warning: #B45309;
+  --color-warning-bg: #FEF3C7;
+  --color-error: #B91C1C;
+  --color-error-bg: #FEE2E2;
+  --color-info: #1D4ED8;
+  --color-info-bg: #DBEAFE;
+  /* Semantic aliases — use these for new code */
+  --color-background: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-muted: #F3F5F8;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-primary: #17488F;
+  --color-primary-hover: #1D55A4;
+  --color-accent: #C9A227;
+  --color-danger: #B91C1C;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D1D5DB transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Светлые секции с градиентом — единый класс, чтобы тёмная тема
+   переключалась вместе со страницей, а не оставалась светлой. */
+.section-gradient {
+  background: linear-gradient(180deg, #ffffff 0%, #f7faff 45%, #ffffff 100%);
+}
+
+/* ---------- Тёмная тема: Deep Navy + Gold ---------- */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #07111F;
+  color: #F1F5FA;
+}
+
+.dark .section-gradient {
+  background: linear-gradient(180deg, #07111F 0%, #0B192B 45%, #07111F 100%);
+}
+
+/* Базы: светлые поверхности становятся тёмными, текст — светлым */
+.dark .bg-white { background-color: #0E2035; }
+.dark .bg-light-gray { background-color: #0B192B; }
+.dark .text-dark-text { color: #F1F5FA; }
+.dark .text-secondary-text { color: #9DB0C4; }
+.dark .border-border { border-color: #1E3350; }
+.dark ::placeholder { color: #5E7186; }
+
+/* Акценты: синий светлеет для читаемости, золото становится ярче */
+.dark .text-primary-blue { color: #7FB0F0; }
+.dark .hover\:text-primary-blue-light:hover { color: #A9CCFA; }
+.dark .text-gold { color: #D4AF37; }
+.dark .text-green-600 { color: #4ADE80; }
+
+/* Серые шкалы из немаркированных мест */
+.dark .text-slate-900, .dark .text-slate-800,
+.dark .text-gray-900, .dark .text-gray-800 { color: #F1F5FA; }
+.dark .text-slate-700, .dark .text-slate-600,
+.dark .text-gray-700 { color: #B9C6D6; }
+.dark .text-slate-500, .dark .text-slate-400,
+.dark .text-gray-500 { color: #93A4B8; }
+.dark .text-gray-600 { color: #9DB0C4; }
+.dark .bg-gray-50 { background-color: rgba(255, 255, 255, 0.04); }
+.dark .border-gray-300 { border-color: #1E3350; }
+.dark .border-gray-100 { border-color: #1E3350; }
+.dark .bg-slate-100, .dark .bg-gray-100 { background-color: rgba(255, 255, 255, 0.07); }
+.dark .bg-slate-50, .dark .bg-gray-50 { background-color: rgba(255, 255, 255, 0.04); }
+.dark .border-slate-200, .dark .border-slate-100,
+.dark .border-gray-200, .dark .border-gray-100 { border-color: #1E3350; }
+
+::selection {
+  background-color: var(--color-primary-blue);
+  color: #FFFFFF;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+@utility animate-accordion-down {
+  animation: accordion-down 0.3s ease-out;
+}
+
+@utility animate-accordion-up {
+  animation: accordion-up 0.3s ease-out;
+}
+
+@keyframes bracket-connector-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes bracket-target-pop {
+  0% {
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(201, 162, 39, 0);
+  }
+}
+
+.bracket-connector-flash {
+  stroke: #C9A227 !important;
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+  animation: bracket-connector-flow 0.45s linear infinite;
+}
+
+.bracket-target-flash {
+  animation: bracket-target-pop 0.65s ease-out 2;
+  border-color: rgba(201, 162, 39, 0.8) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bracket-connector-flash,
+  .bracket-target-flash {
+    animation: none;
+  }
+}
+
+/* ===== Расписание и группы: цветные стеклянные карточки =====
+   Акцент задаётся инлайн-переменными --gc-accent / --gc-ink / --gc-soft
+   (см. lib/groupColors). Трансформации hover — через framer-motion
+   whileHover, чтобы MotionConfig reducedMotion="user" их отключал. */
+.session-card {
+  --gc-accent: #3b82f6;
+  --gc-ink: #1d4ed8;
+  --gc-soft: #dbeafe;
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--gc-accent) 15%, rgba(255, 255, 255, 0.9)) 0%,
+      rgba(255, 255, 255, 0.75) 55%,
+      color-mix(in srgb, var(--gc-accent) 9%, rgba(255, 255, 255, 0.75)) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 32%, transparent);
+  border-left: 2px solid var(--gc-accent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 1px 2px rgba(8, 26, 53, 0.07),
+    0 2px 10px color-mix(in srgb, var(--gc-accent) 12%, transparent);
+  transition:
+    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease-out,
+    border-color 260ms ease-out;
+}
+
+.session-card:hover {
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--gc-accent) 23%, rgba(255, 255, 255, 0.92)) 0%,
+      rgba(255, 255, 255, 0.82) 55%,
+      color-mix(in srgb, var(--gc-accent) 15%, rgba(255, 255, 255, 0.82)) 100%
+    );
+  border-color: color-mix(in srgb, var(--gc-accent) 55%, transparent);
+  border-left-color: var(--gc-accent);
+  box-shadow:
+    0 6px 18px color-mix(in srgb, var(--gc-accent) 28%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--gc-accent) 12%, transparent);
+}
+
+.session-card:focus-visible {
+  outline: 2px solid var(--gc-accent);
+  outline-offset: 2px;
+}
+
+/* Идёт занятие прямо сейчас — золотая полоса вместо акцентной. */
+.session-card-live {
+  border-left-color: #c9a227;
+}
+
+.session-card .session-dot {
+  background-color: var(--gc-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gc-accent) 20%, transparent);
+}
+
+.session-card .session-time {
+  color: var(--gc-ink);
+}
+
+.dark .session-card {
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--gc-accent) 28%, rgba(14, 32, 53, 0.88)) 0%,
+      rgba(14, 32, 53, 0.82) 55%,
+      color-mix(in srgb, var(--gc-accent) 15%, rgba(14, 32, 53, 0.82)) 100%
+    );
+  border-color: color-mix(in srgb, var(--gc-accent) 45%, transparent);
+  border-left-color: var(--gc-accent);
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--gc-accent) 22%, transparent);
+}
+
+.dark .session-card:hover {
+  border-color: color-mix(in srgb, var(--gc-accent) 65%, transparent);
+  border-left-color: var(--gc-accent);
+  box-shadow:
+    0 8px 22px color-mix(in srgb, var(--gc-accent) 35%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--gc-accent) 16%, transparent);
+}
+
+.dark .session-card-live {
+  border-left-color: #d4af37;
+}
+
+.dark .session-card .session-time {
+  color: var(--gc-soft);
+}
+
+/* Карточки возрастных групп на лендинге. */
+.group-card {
+  --gc-accent: #3b82f6;
+  --gc-ink: #1d4ed8;
+  --gc-soft: #dbeafe;
+  position: relative;
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--gc-accent) 12%, rgba(255, 255, 255, 0.9)) 0%,
+      rgba(255, 255, 255, 0.85) 60%,
+      color-mix(in srgb, var(--gc-accent) 7%, rgba(255, 255, 255, 0.85)) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 26%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 1px 3px rgba(8, 26, 53, 0.06),
+    0 4px 16px color-mix(in srgb, var(--gc-accent) 10%, transparent);
+  transition:
+    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 300ms ease-out,
+    border-color 300ms ease-out;
+}
+
+.group-card:hover {
+  border-color: color-mix(in srgb, var(--gc-accent) 50%, transparent);
+  box-shadow:
+    0 12px 32px color-mix(in srgb, var(--gc-accent) 24%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--gc-accent) 10%, transparent);
+}
+
+.group-card:focus-visible {
+  outline: 2px solid var(--gc-accent);
+  outline-offset: 2px;
+}
+
+.group-card .group-chip {
+  background: color-mix(in srgb, var(--gc-accent) 14%, #ffffff);
+  color: var(--gc-ink);
+  transition: background 300ms ease-out;
+}
+
+.group-card:hover .group-chip {
+  background: color-mix(in srgb, var(--gc-accent) 22%, #ffffff);
+}
+
+.group-card .group-blob {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--gc-accent) 22%, transparent),
+    transparent
+  );
+}
+
+.group-card .group-meta {
+  color: var(--gc-ink);
+}
+
+.dark .group-card .group-meta {
+  color: var(--gc-soft);
+}
+
+.dark .group-card {
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--gc-accent) 24%, rgba(14, 32, 53, 0.9)) 0%,
+      rgba(14, 32, 53, 0.85) 100%
+    );
+  border-color: color-mix(in srgb, var(--gc-accent) 40%, transparent);
+}
+
+.dark .group-card .group-chip {
+  background: color-mix(in srgb, var(--gc-accent) 28%, rgba(14, 32, 53, 0.9));
+  color: var(--gc-soft);
+}
+
+/* Активная пилюля фильтра групп — в цвете выбранной группы. */
+.filter-pill-active {
+  background: color-mix(in srgb, var(--gc-accent) 16%, #ffffff);
+  color: var(--gc-ink);
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 45%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--gc-accent) 22%, transparent);
+}
+
+.dark .filter-pill-active {
+  background: color-mix(in srgb, var(--gc-accent) 26%, rgba(14, 32, 53, 0.9));
+  color: var(--gc-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-card,
+  .group-card,
+  .filter-pill-active {
+    transition: none;
+  }
+}
