@@ -1,0 +1,717 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  /* Brand — deep, calm, professional.
+     Фаза 0: navy + gold — основная идентичность KWF.
+     Старые имена сохранены как алиасы (обратная совместимость).
+     Новые шкалы — для постепенного перехода, без ломки. */
+  --color-dark-blue: #071426;
+  --color-navy: #0B2140;
+  --color-navy-950: #060F1E;
+  --color-navy-900: #0A1B33;
+  --color-navy-800: #10294E;
+  --color-navy-700: #17488F;
+  --color-primary-blue: #17488F;
+  --color-primary-blue-light: #1D55A4;
+  --color-primary-blue-lighter: #2F6FBE;
+  --color-accent-warm: #C9A227;
+  --color-accent-warm-light: #FAF4E6;
+  --color-gold: #C9A227;
+  --color-gold-deep: #B98F14;
+  --color-gold-bright: #D4AF37;
+  --color-gold-pale: #E7C95A;
+  --color-gold-soft: #F6EDD3;
+  /* Functional energy red — НЕ третий бренд-цвет.
+     Только: LIVE, urgent, error, важные CTA-акценты.
+     Не использовать для заливок, декора, обычных кнопок. */
+  --color-energy: #C93A2E;
+  --color-energy-dark: #A92E24;
+  --color-energy-bg: #FDECEA;
+  /* Surfaces & text */
+  --color-surface: #FFFFFF;
+  --color-light-gray: #F5F7FA;
+  --color-border: #E8EBEF;
+  --color-dark-text: #111827;
+  --color-secondary-text: #6B7280;
+  /* Status (single source for badges, alerts, form feedback) */
+  --color-success: #15803D;
+  --color-success-bg: #DCFCE7;
+  --color-warning: #B45309;
+  --color-warning-bg: #FEF3C7;
+  --color-error: #B91C1C;
+  --color-error-bg: #FEE2E2;
+  --color-info: #1D4ED8;
+  --color-info-bg: #DBEAFE;
+  /* Focus: единый цвет кольца фокуса (светлая и тёмная темы).
+     Компоненты со своим ring (Button, TextInput) его переопределяют;
+     остальное (ссылки, табло-кнопки) — через глобальный :focus-visible ниже. */
+  --color-focus: #1D55A4;
+  /* Radius: семантическая шкала (значения = уже используемые в коде).
+     field 0.75rem — inputs, selects, мелкие контролы;
+     card 1rem — карточки, панели, таблицы-обёртки;
+     sheet 1.5rem — модалки, drawer, крупные шиты.
+     Кнопки Button — всегда rounded-lg; пилюли/бейджи — rounded-full. */
+  --radius-field: 0.75rem;
+  --radius-card: 1rem;
+  --radius-sheet: 1.5rem;
+  /* Control heights: единая шкала высот интерактива.
+     sm 2.25rem (h-9) — компактные кнопки/тулбары;
+     md 2.5rem (h-10) — фильтры, инпуты, селекты, кнопки внутренних страниц;
+     lg 2.75rem (h-11) — крупные поля форм;
+     xl 3.5rem+ (h-14/h-16) — только hero/landing CTA (Button default/lg).
+     Внутренние страницы используют sm/md; default/lg Button — homepage. */
+  --control-h-sm: 2.25rem;
+  --control-h-md: 2.5rem;
+  --control-h-lg: 2.75rem;
+  /* Shadows: restrained, без gaming-эффектов. */
+  --shadow-card: 0 1px 2px rgba(8, 26, 53, 0.06), 0 4px 16px rgba(8, 26, 53, 0.06);
+  --shadow-pop: 0 12px 32px rgba(8, 26, 53, 0.18);
+  /* Semantic aliases — use these for new code.
+     Типографика: Inter остаётся единственным шрифтом (кириллица,
+     веса, совместимость проверены). Display-шрифт не вводим.
+     Карта системы: цвета/типографика — @theme выше; поверхности kwf-*,
+     session/group-карточки, print — ниже; статусы — StatusPill;
+     скелетоны — SkeletonCard; тосты — Toaster. Дублей не заводить. */
+  --color-background: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-muted: #F3F5F8;
+  --color-paper: #FAF8F2;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-primary: #17488F;
+  --color-primary-hover: #1D55A4;
+  --color-accent: #C9A227;
+  --color-danger: #B91C1C;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Manrope — только заголовки (кириллица, спортивный характер).
+     Текст и интерфейс остаются на Inter. */
+  --font-display: "Manrope", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D1D5DB transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Типографика заголовков: Manrope — сильный и сдержанный,
+   без агрессии. Размеры/веса остаются на компонентах. */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* Числа, даты, веса, счета — табличные цифры без скачков ширины. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Длинный текст (новости, описания): комфортная мера строки. */
+.prose-kwf {
+  max-width: 68ch;
+  line-height: 1.75;
+}
+
+/* Светлые секции с градиентом — единый класс, чтобы тёмная тема
+   переключалась вместе со страницей, а не оставалась светлой. */
+.section-gradient {
+  background: linear-gradient(180deg, #ffffff 0%, #f7faff 45%, #ffffff 100%);
+}
+
+/* Фаза 0: канонические примитивы федерации (аддитивно, строгий
+   минимализм — без glassmorphism и gaming-эффектов).
+   Использование: новые/обновляемые блоки — через эти классы,
+   старые блоки не трогаем до своих фаз. */
+.kwf-container {
+  margin-inline: auto;
+  max-width: 1280px;
+  padding-inline: 1.5rem;
+}
+
+.kwf-section {
+  padding-block: 4rem;
+}
+
+@media (min-width: 768px) {
+  .kwf-section {
+    padding-block: 6rem;
+  }
+}
+
+/* Внутренние страницы: компактный ритм вместо лендингового kwf-section.
+   Контейнер тот же (1280px), вертикаль плотнее: 2rem / 2.5rem + pb для
+   fixed-панелей (BulkBar). Только новые/обновляемые страницы. */
+.kwf-page {
+  margin-inline: auto;
+  max-width: 1280px;
+  padding-inline: 1rem;
+  padding-block: 2rem 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .kwf-page {
+    padding-inline: 1.5rem;
+    padding-block-start: 2.5rem;
+  }
+}
+
+/* Типографическая шкала внутренних страниц (homepage Design DNA,
+   уменьшенная на шаг: внутренние H1 = homepage H2-). Manrope — только
+   заголовки, как на главной. */
+.kwf-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-primary-blue);
+}
+
+.dark .kwf-eyebrow {
+  color: var(--color-gold-bright);
+}
+
+.kwf-h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--color-dark-text);
+}
+
+@media (min-width: 640px) {
+  .kwf-h1 {
+    font-size: 1.875rem;
+  }
+}
+
+.dark .kwf-h1 {
+  color: #F1F5FA;
+}
+
+.kwf-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  font-size: 1.125rem;
+  line-height: 1.35;
+  color: var(--color-dark-text);
+}
+
+@media (min-width: 640px) {
+  .kwf-h2 {
+    font-size: 1.25rem;
+  }
+}
+
+.dark .kwf-h2 {
+  color: #F1F5FA;
+}
+
+.kwf-h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--color-dark-text);
+}
+
+.dark .kwf-h3 {
+  color: #F1F5FA;
+}
+
+.kwf-lead {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-secondary-text);
+}
+
+@media (min-width: 640px) {
+  .kwf-lead {
+    font-size: 1rem;
+  }
+}
+
+.kwf-card {
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.dark .kwf-card {
+  background-color: #0E2035;
+  border-color: #1E3350;
+}
+
+.kwf-hairline-gold {
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
+}
+
+/* Фирменный мотив «dojo-line»: тонкая золотая линия как знак бренда.
+   Использование: разделители групп в navbar, верхняя кромка диалогов,
+   карточки списков. Сдержанно, без декора ради декора. */
+.dojo-divider-v {
+  width: 1px;
+  align-self: center;
+  height: 1.5rem;
+  background: color-mix(in srgb, var(--color-gold) 30%, transparent);
+}
+
+.dojo-top-line {
+  position: relative;
+}
+
+.dojo-top-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-gold) 35%, transparent);
+  pointer-events: none;
+}
+
+/* ---------- Тёмная тема: Deep Navy + Gold ---------- */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #07111F;
+  color: #F1F5FA;
+}
+
+.dark .section-gradient {
+  background: linear-gradient(180deg, #07111F 0%, #0B192B 45%, #07111F 100%);
+}
+
+/* Базы: светлые поверхности становятся тёмными, текст — светлым */
+.dark .bg-white { background-color: #0E2035; }
+.dark .bg-light-gray { background-color: #0B192B; }
+.dark .text-dark-text { color: #F1F5FA; }
+.dark .text-secondary-text { color: #9DB0C4; }
+.dark .border-border { border-color: #1E3350; }
+/* Placeholder: контрастнее для читаемости подсказок. */
+.dark ::placeholder { color: #8CA0B5; opacity: 1; }
+
+/* Акценты: синий светлеет для читаемости, золото становится ярче */
+.dark .text-primary-blue { color: #7FB0F0; }
+.dark .hover\:text-primary-blue-light:hover { color: #A9CCFA; }
+.dark .text-gold { color: #D4AF37; }
+.dark .text-green-600 { color: #4ADE80; }
+
+/* Серые шкалы из немаркированных мест */
+.dark .text-slate-900, .dark .text-slate-800,
+.dark .text-gray-900, .dark .text-gray-800 { color: #F1F5FA; }
+.dark .text-slate-700, .dark .text-slate-600,
+.dark .text-gray-700 { color: #B9C6D6; }
+.dark .text-slate-500, .dark .text-slate-400,
+.dark .text-gray-500 { color: #93A4B8; }
+.dark .text-gray-600 { color: #9DB0C4; }
+.dark .bg-gray-50 { background-color: rgba(255, 255, 255, 0.04); }
+.dark .border-gray-300 { border-color: #1E3350; }
+.dark .border-gray-100 { border-color: #1E3350; }
+.dark .bg-slate-100, .dark .bg-gray-100 { background-color: rgba(255, 255, 255, 0.07); }
+.dark .bg-slate-50, .dark .bg-gray-50 { background-color: rgba(255, 255, 255, 0.04); }
+.dark .border-slate-200, .dark .border-slate-100,
+.dark .border-gray-200, .dark .border-gray-100 { border-color: #1E3350; }
+
+/* Токены-поверхности: чинят и opacity-варианты (bg-light-gray/60,
+   divide-border/70, hover:bg-light-gray/50), которые точечные
+   классы вида .dark .bg-light-gray не покрывают. */
+.dark {
+  --color-border: #1E3350;
+  --color-light-gray: #0B192B;
+}
+/* Сплошной bg-border (прогресс-бары, скелетоны). */
+.dark .bg-border { background-color: #1E3350; }
+/* Белый hover-флэш строк (NotificationCenter/FamilyFeed/cabinet) → приглушённый. */
+.dark .hover\:bg-white:hover { background-color: rgba(255, 255, 255, 0.06); }
+
+/* Фидбэк-палитры: светлые тинты → тёмные, текст — светлым. */
+.dark .bg-green-50, .dark .bg-green-50\/60 { background-color: rgba(21, 128, 61, 0.16); }
+.dark .bg-red-50 { background-color: rgba(185, 28, 28, 0.16); }
+.dark .bg-yellow-50 { background-color: rgba(180, 83, 9, 0.18); }
+.dark .bg-blue-50 { background-color: rgba(29, 78, 216, 0.20); }
+.dark .bg-amber-50 { background-color: rgba(180, 83, 9, 0.18); }
+.dark .bg-blue-100 { background-color: rgba(29, 78, 216, 0.28); }
+.dark .bg-yellow-200 { background-color: rgba(180, 83, 9, 0.35); }
+.dark .border-green-200, .dark .border-red-200, .dark .border-yellow-200,
+.dark .border-blue-100, .dark .border-amber-200 { border-color: rgba(255, 255, 255, 0.14); }
+.dark .text-green-700, .dark .text-green-800 { color: #86EFAC; }
+.dark .text-red-700, .dark .text-red-600 { color: #FCA5A5; }
+.dark .text-yellow-700, .dark .text-yellow-800, .dark .text-amber-800 { color: #FCD34D; }
+.dark .text-blue-700, .dark .text-blue-800 { color: #93C5FD; }
+.dark .text-yellow-600 { color: #E7C95A; }
+.dark .text-gold-deep { color: #D4AF37; }
+
+/* Gold-soft панели (анонсы, BYE, готовность) → тёмный золотой тинт;
+   navy-текст внутри — светлым золотом, иначе исчезает. */
+.dark .bg-gold-soft,
+.dark .bg-gold-soft\/40,
+.dark .bg-gold-soft\/50,
+.dark .bg-gold-soft\/60,
+.dark .bg-gold-soft\/70 { background-color: rgba(201, 162, 39, 0.12); }
+.dark .bg-gold-soft :is(.text-dark-blue, .text-dark-blue\/60, .text-dark-blue\/70),
+.dark .bg-gold-soft\/40 :is(.text-dark-blue, .text-dark-blue\/60, .text-dark-blue\/70),
+.dark .bg-gold-soft\/50 :is(.text-dark-blue, .text-dark-blue\/60, .text-dark-blue\/70),
+.dark .bg-gold-soft\/60 :is(.text-dark-blue, .text-dark-blue\/60, .text-dark-blue\/70),
+.dark .bg-gold-soft\/70 :is(.text-dark-blue, .text-dark-blue\/60, .text-dark-blue\/70) { color: #E9D5A0; }
+
+/* Тёмный скроллбар вместо светлого. */
+.dark * {
+  scrollbar-color: #33475F transparent;
+}
+
+::selection {
+  background-color: var(--color-primary-blue);
+  color: #FFFFFF;
+}
+
+/* Phase 2: видимый фокус для всего интерактивного без своего ring
+   (ссылки, табло-кнопки, крошки). Компоненты с собственным
+   focus-visible:ring (Button, TextInput) не затрагиваются:
+   Tailwind ring рисуется через box-shadow, а не outline. */
+:where(a, summary):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.dark :where(a, summary):focus-visible {
+  outline-color: var(--color-gold-bright);
+}
+
+/* Skip-link из AppShell: скрыта до фокуса с клавиатуры. */
+.kwf-skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-field);
+  background: var(--color-gold);
+  color: var(--color-dark-blue);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: top 150ms ease-out;
+}
+
+.kwf-skip-link:focus-visible {
+  top: 1rem;
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 2px;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+@utility animate-accordion-down {
+  animation: accordion-down 0.3s ease-out;
+}
+
+@utility animate-accordion-up {
+  animation: accordion-up 0.3s ease-out;
+}
+
+@keyframes bracket-connector-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes bracket-target-pop {
+  0% {
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(201, 162, 39, 0);
+  }
+}
+
+.bracket-connector-flash {
+  stroke: #C9A227 !important;
+  stroke-width: 2.5;
+  stroke-dasharray: 7 5;
+  animation: bracket-connector-flow 0.45s linear infinite;
+}
+
+.bracket-target-flash {
+  animation: bracket-target-pop 0.65s ease-out 2;
+  border-color: rgba(201, 162, 39, 0.8) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bracket-connector-flash,
+  .bracket-target-flash {
+    animation: none;
+  }
+}
+
+/* ===== Расписание и группы: цветные стеклянные карточки =====
+   Акцент задаётся инлайн-переменными --gc-accent / --gc-ink / --gc-soft
+   (см. lib/groupColors). Трансформации hover — через framer-motion
+   whileHover, чтобы MotionConfig reducedMotion="user" их отключал. */
+.session-card {
+  --gc-accent: #3b82f6;
+  --gc-ink: #1d4ed8;
+  --gc-soft: #dbeafe;
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--gc-accent) 15%, rgba(255, 255, 255, 0.9)) 0%,
+      rgba(255, 255, 255, 0.75) 55%,
+      color-mix(in srgb, var(--gc-accent) 9%, rgba(255, 255, 255, 0.75)) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 32%, transparent);
+  border-left: 2px solid var(--gc-accent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 1px 2px rgba(8, 26, 53, 0.07),
+    0 2px 10px color-mix(in srgb, var(--gc-accent) 12%, transparent);
+  transition:
+    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease-out,
+    border-color 260ms ease-out;
+}
+
+.session-card:hover {
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--gc-accent) 23%, rgba(255, 255, 255, 0.92)) 0%,
+      rgba(255, 255, 255, 0.82) 55%,
+      color-mix(in srgb, var(--gc-accent) 15%, rgba(255, 255, 255, 0.82)) 100%
+    );
+  border-color: color-mix(in srgb, var(--gc-accent) 55%, transparent);
+  border-left-color: var(--gc-accent);
+  box-shadow:
+    0 6px 18px color-mix(in srgb, var(--gc-accent) 28%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--gc-accent) 12%, transparent);
+}
+
+.session-card:focus-visible {
+  outline: 2px solid var(--gc-accent);
+  outline-offset: 2px;
+}
+
+/* Идёт занятие прямо сейчас — золотая полоса вместо акцентной. */
+.session-card-live {
+  border-left-color: #c9a227;
+}
+
+.session-card .session-dot {
+  background-color: var(--gc-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gc-accent) 20%, transparent);
+}
+
+.session-card .session-time {
+  color: var(--gc-ink);
+}
+
+.dark .session-card {
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--gc-accent) 28%, rgba(14, 32, 53, 0.88)) 0%,
+      rgba(14, 32, 53, 0.82) 55%,
+      color-mix(in srgb, var(--gc-accent) 15%, rgba(14, 32, 53, 0.82)) 100%
+    );
+  border-color: color-mix(in srgb, var(--gc-accent) 45%, transparent);
+  border-left-color: var(--gc-accent);
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--gc-accent) 22%, transparent);
+}
+
+.dark .session-card:hover {
+  border-color: color-mix(in srgb, var(--gc-accent) 65%, transparent);
+  border-left-color: var(--gc-accent);
+  box-shadow:
+    0 8px 22px color-mix(in srgb, var(--gc-accent) 35%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--gc-accent) 16%, transparent);
+}
+
+.dark .session-card-live {
+  border-left-color: #d4af37;
+}
+
+.dark .session-card .session-time {
+  color: var(--gc-soft);
+}
+
+/* Карточки возрастных групп на лендинге. */
+.group-card {
+  --gc-accent: #3b82f6;
+  --gc-ink: #1d4ed8;
+  --gc-soft: #dbeafe;
+  position: relative;
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--gc-accent) 12%, rgba(255, 255, 255, 0.9)) 0%,
+      rgba(255, 255, 255, 0.85) 60%,
+      color-mix(in srgb, var(--gc-accent) 7%, rgba(255, 255, 255, 0.85)) 100%
+    );
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 26%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 1px 3px rgba(8, 26, 53, 0.06),
+    0 4px 16px color-mix(in srgb, var(--gc-accent) 10%, transparent);
+  transition:
+    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 300ms ease-out,
+    border-color 300ms ease-out;
+}
+
+.group-card:hover {
+  border-color: color-mix(in srgb, var(--gc-accent) 50%, transparent);
+  box-shadow:
+    0 12px 32px color-mix(in srgb, var(--gc-accent) 24%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--gc-accent) 10%, transparent);
+}
+
+.group-card:focus-visible {
+  outline: 2px solid var(--gc-accent);
+  outline-offset: 2px;
+}
+
+.group-card .group-chip {
+  background: color-mix(in srgb, var(--gc-accent) 14%, #ffffff);
+  color: var(--gc-ink);
+  transition: background 300ms ease-out;
+}
+
+.group-card:hover .group-chip {
+  background: color-mix(in srgb, var(--gc-accent) 22%, #ffffff);
+}
+
+.group-card .group-blob {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--gc-accent) 22%, transparent),
+    transparent
+  );
+}
+
+.group-card .group-meta {
+  color: var(--gc-ink);
+}
+
+.dark .group-card .group-meta {
+  color: var(--gc-soft);
+}
+
+.dark .group-card {
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--gc-accent) 24%, rgba(14, 32, 53, 0.9)) 0%,
+      rgba(14, 32, 53, 0.85) 100%
+    );
+  border-color: color-mix(in srgb, var(--gc-accent) 40%, transparent);
+}
+
+.dark .group-card .group-chip {
+  background: color-mix(in srgb, var(--gc-accent) 28%, rgba(14, 32, 53, 0.9));
+  color: var(--gc-soft);
+}
+
+/* Активная пилюля фильтра групп — в цвете выбранной группы. */
+.filter-pill-active {
+  background: color-mix(in srgb, var(--gc-accent) 16%, #ffffff);
+  color: var(--gc-ink);
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 45%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--gc-accent) 22%, transparent);
+}
+
+.dark .filter-pill-active {
+  background: color-mix(in srgb, var(--gc-accent) 26%, rgba(14, 32, 53, 0.9));
+  color: var(--gc-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-card,
+  .group-card,
+  .filter-pill-active {
+    transition: none;
+  }
+}
+
+/* Фаза 7: печать протокола — чистый ч/б без теней и анимаций. */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Phase 2B: печать документов — виден только .print-area.
+   Класс printing-doc ставит кнопка «Печать», остальные print-потоки не затронуты. */
+@media print {
+  body.printing-doc * {
+    visibility: hidden;
+  }
+
+  body.printing-doc .print-area,
+  body.printing-doc .print-area * {
+    visibility: visible;
+  }
+
+  body.printing-doc .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
